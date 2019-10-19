@@ -1,6 +1,6 @@
 /*
  * This file is part of OpenCorsairLink.
- * Copyright (C) 2017,2018  Sean Nelson <audiohacked@gmail.com>
+ * Copyright (C) 2017-2019  Sean Nelson <audiohacked@gmail.com>
 
  * OpenCorsairLink is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -125,22 +125,21 @@ struct led_control
     uint16_t temperatures[3];
 };
 
-struct fan_control
-{
-    uint8_t channel;
-    enum motor_modes mode;
-    struct temp_speed_pair table[6];
+struct fan_control {
+  uint8_t channel;
+  enum motor_modes mode;
+  struct temp_speed_pair table[7];
 
-    // data returns
-    uint8_t fan_count;
-    uint8_t fan_type;
-    uint8_t temp_sensor_id;
-    uint16_t data;
-    uint16_t speed;
-    uint8_t speed_pwm;
-    uint16_t speed_rpm;
-    uint16_t max_speed;
-    char mode_string[64];
+  // data returns
+  uint8_t fan_count;
+  uint8_t fan_type;
+  uint8_t temp_sensor_id;
+  uint16_t data;
+  uint16_t speed;
+  uint8_t speed_pwm;
+  uint16_t speed_rpm;
+  uint16_t max_speed;
+  char mode_string[64];
 };
 
 struct pump_control
@@ -269,7 +268,7 @@ static char* led_options[] = {[SUBOPTION_LED_CHANNEL] = "channel",
                               [SUBOPTION_LED_CHANGE_STYLE] = "change_style",
                               [SUBOPTION_LED_COLORS] = "colors",
                               [SUBOPTION_LED_WARN] = "warning_color",
-                              [SUBOPTION_LED_TEMPERATURE] = "temperature",
+                              [SUBOPTION_LED_TEMPERATURES] = "temps",
                               [SUBOPTION_LED_LIST_END] = 0};
 
 static char* pump_options[] = {

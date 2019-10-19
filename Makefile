@@ -1,7 +1,7 @@
 ####################################################################################################
 #
 # This file is part of OpenCorsairLink.
-# Copyright (C) 2017,2018  Sean Nelson <audiohacked@gmail.com>
+# Copyright (C) 2017-2019  Sean Nelson <audiohacked@gmail.com>
 #
 # OpenCorsairLink is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -31,6 +31,11 @@ LDFLAGS ?= -lm
 # pkg-config for libusb-1.0
 CFLAGS += $(shell pkg-config --cflags libusb-1.0)
 LDFLAGS += $(shell pkg-config --libs libusb-1.0)
+
+PREFIX = /usr/local
+
+GIT_VERSION := $(shell git describe --abbrev=4 --always --tags)
+CFLAGS += -DVERSION=\"v0.9.0.0-$(GIT_VERSION)\"
 
 ####################################################################################################
 
@@ -117,6 +122,15 @@ tidy: $(MAINLOGIC_SOURCE) $(LOWLEVEL_SOURCE) $(PROTOCOL_SOURCE)
 .PHONY: clean
 clean:
 	$(RM) $(EXECUTABLE) $(OBJS) $(OBJS_LL) $(OBJS_PROTO)
+
+.PHONY: install
+install: $(EXECUTABLE)
+	mkdir -p $(DESTDIR)$(PREFIX)/bin
+	cp $< $(DESTDIR)$(PREFIX)/bin/$(EXECUTABLE)
+
+.PHONY: uninstall
+uninstall:
+	rm -f $(DESTDIR)$(PREFIX)/bin/$(EXECUTABLE)
 
 %.o: %.c
 	$(CC) $(CFLAGS) -g -c -o $@ $<

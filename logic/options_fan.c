@@ -1,6 +1,6 @@
 /*
  * This file is part of OpenCorsairLink.
- * Copyright (C) 2017,2018  Sean Nelson <audiohacked@gmail.com>
+ * Copyright (C) 2017-2019  Sean Nelson <audiohacked@gmail.com>
 
  * OpenCorsairLink is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -68,7 +68,7 @@ fan_suboptions_parse( char* subopts, struct fan_control* settings )
             token = strtok( value, ":" );
             while ( token != NULL )
             {
-                if ( ii == 6 )
+                if ( ii == 7 )
                     break;
                 sscanf( token, "%hu", &settings->table[ii].temperature );
                 msg_debug( "FAN Temperature %u: %u\n", ii, settings->table[ii].temperature );
@@ -82,7 +82,7 @@ fan_suboptions_parse( char* subopts, struct fan_control* settings )
             token = strtok( value, ":" );
             while ( token != NULL )
             {
-                if ( ii == 6 )
+                if ( ii == 7 )
                     break;
                 sscanf( token, "%hu", &settings->table[ii].speed );
                 msg_debug( "FAN Speed %d: %u\n", ii, settings->table[ii].speed );

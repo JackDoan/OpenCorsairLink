@@ -1,6 +1,6 @@
 /*
  * This file is part of OpenCorsairLink.
- * Copyright (C) 2017,2018  Sean Nelson <audiohacked@gmail.com>
+ * Copyright (C) 2017-2019  Sean Nelson <audiohacked@gmail.com>
 
  * OpenCorsairLink is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -120,7 +120,7 @@ led_suboptions_parse( char* subopts, struct led_control* settings )
                 &settings->led_colors[2].green, &settings->led_colors[2].blue );
             break;
 
-        case SUBOPTION_LED_TEMPERATURE: /* led warning temperatures */
+        case SUBOPTION_LED_TEMPERATURES: /* led warning temperatures */
             ii = 0;
             token = strtok( value, ":" );
             while ( token != NULL )

@@ -1,6 +1,6 @@
 /*
  * This file is part of OpenCorsairLink.
- * Copyright (C) 2017,2018  Sean Nelson <audiohacked@gmail.com>
+ * Copyright (C) 2017-2019  Sean Nelson <audiohacked@gmail.com>
 
  * OpenCorsairLink is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -85,7 +85,7 @@ main( int argc, char* argv[] )
 
     corsairlink_device_scanner( context, &scanlist_count );
     msg_debug( "DEBUG: scan done, start routines\n" );
-    msg_debug( "DEBUG: device_number = %d\n", device_number );
+    msg_debug( "DEBUG: selected device_number = %d\n", device_number );
 
     if ( device_number >= 0 )
     {

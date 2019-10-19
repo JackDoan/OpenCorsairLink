@@ -1,6 +1,6 @@
 /*
  * This file is part of OpenCorsairLink.
- * Copyright (C) 2017,2018  Sean Nelson <audiohacked@gmail.com>
+ * Copyright (C) 2017-2019  Sean Nelson <audiohacked@gmail.com>
 
  * OpenCorsairLink is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -265,33 +265,33 @@ struct corsair_device_driver corsairlink_driver_asetekpro = {
         },
     .fan =
         {
-            .count = corsairlink_asetek_fan_count,
+            .count = corsairlink_asetekpro_fan_count,
             .speed = corsairlink_asetekpro_fan_speed,
-            .print_mode = corsairlink_asetek_fan_print_mode,
+            .print_mode = corsairlink_asetekpro_fan_print_mode,
             .profile =
                 {
-                    .read_profile = corsairlink_asetek_fan_mode_read,
+                    .read_profile = corsairlink_asetekpro_fan_mode_read,
                     .read_rpm = corsairlink_unspported_fan,
                     .read_pwm = corsairlink_unspported_fan,
                     .write_profile_custom = corsairlink_unspported_fan,
                     .write_profile_default = corsairlink_unspported_fan,
-                    .write_profile_performance = corsairlink_asetek_fan_mode_performance,
-                    .write_profile_balanced = corsairlink_asetek_fan_mode_balanced,
-                    .write_profile_quiet = corsairlink_asetek_fan_mode_quiet,
-                    .write_rpm = corsairlink_unspported_fan,
-                    .write_pwm = corsairlink_unspported_fan,
-                    .write_custom_curve = corsairlink_asetek_fan_curve,
+                    .write_profile_performance = corsairlink_asetekpro_fan_mode_performance,
+                    .write_profile_balanced = corsairlink_asetekpro_fan_mode_balanced,
+                    .write_profile_quiet = corsairlink_asetekpro_fan_mode_quiet,
+                    .write_rpm = corsairlink_asetekpro_fan_mode_rpm,
+                    .write_pwm = corsairlink_asetekpro_fan_mode_pwm,
+                    .write_custom_curve = corsairlink_asetekpro_fan_curve,
                 },
         },
     .pump =
         {
             .profile =
                 {
-                    .read_profile = corsairlink_unspported_pump,
+                    .read_profile = corsairlink_asetekpro_pump_mode_read,
                     .write_profile_default = corsairlink_unspported_pump,
-                    .write_profile_performance = corsairlink_unspported_pump,
-                    .write_profile_balanced = corsairlink_unspported_pump,
-                    .write_profile_quiet = corsairlink_unspported_pump,
+                    .write_profile_performance = corsairlink_asetekpro_pump_mode_performance,
+                    .write_profile_balanced = corsairlink_asetekpro_pump_mode_balanced,
+                    .write_profile_quiet = corsairlink_asetekpro_pump_mode_quiet,
                     .write_profile_custom = corsairlink_unspported_pump,
                     .write_custom_curve = corsairlink_unspported_pump,
                 },
@@ -326,12 +326,12 @@ struct corsair_device_driver corsairlink_driver_commanderpro = {
         },
     .fan =
         {
-            .count = corsairlink_unspported_fan,
+            .count = corsairlink_commanderpro_fan_count,
             .speed = corsairlink_unspported_fan,
             .print_mode = corsairlink_commanderpro_fan_print_mode,
             .profile =
                 {
-                    .read_profile = corsairlink_unspported_fan,
+                    .read_profile = corsairlink_commanderpro_fan_mode_read,
                     .read_rpm = corsairlink_commanderpro_get_fan_speed_rpm,
                     .read_pwm = corsairlink_commanderpro_get_fan_speed_pwm,
                     .write_profile_custom = corsairlink_unspported_fan,
@@ -341,7 +341,7 @@ struct corsair_device_driver corsairlink_driver_commanderpro = {
                     .write_profile_quiet = corsairlink_unspported_fan,
                     .write_rpm = corsairlink_commanderpro_set_fan_speed_rpm,
                     .write_pwm = corsairlink_commanderpro_set_fan_speed_pwm,
-                    .write_custom_curve = corsairlink_commanderpro_set_fan_curve,
+                    .write_custom_curve = corsairlink_unspported_fan,
                 },
         },
     .power =

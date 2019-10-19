@@ -1,6 +1,6 @@
 /*
  * This file is part of OpenCorsairLink.
- * Copyright (C) 2017,2018  Sean Nelson <audiohacked@gmail.com>
+ * Copyright (C) 2017-2019  Sean Nelson <audiohacked@gmail.com>
 
  * OpenCorsairLink is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -39,7 +39,11 @@ corsairlink_handle_close( struct libusb_device_handle* handle )
     int rr;
 
     rr = libusb_release_interface( handle, 0 );
-    rr = libusb_attach_kernel_driver( handle, 0 );
+    if ( rr < 0 )
+    {
+        msg_err("Unable to release USB interface\n");
+    }
+
     libusb_close( handle );
 
     return rr;
@@ -98,8 +102,18 @@ corsairlink_device_scanner( libusb_context* context, int* _scanlist_count )
                 rr = libusb_open( devices[ii], &scanlist[scanlist_count].handle );
                 if ( scanlist[scanlist_count].handle != NULL )
                 { // Maybe try 'if (rr == 0)'
-                    rr = libusb_detach_kernel_driver( scanlist[scanlist_count].handle, 0 );
+                    rr = libusb_set_auto_detach_kernel_driver( scanlist[scanlist_count].handle, 1 );
+                    if ( rr != LIBUSB_SUCCESS )
+                    {
+                        msg_err("Platform does not support kernel detachment\n");
+                    }
+
                     rr = libusb_claim_interface( scanlist[scanlist_count].handle, 0 );
+                    if ( rr < 0 )
+                    {
+                        msg_err("Unable to claim USB device interface\n");
+                        return rr;
+                    }
 
                     /* get device_id if we have a proper device handle */
                     device->driver->device_id(
