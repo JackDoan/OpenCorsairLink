@@ -138,6 +138,19 @@ corsairlink_commanderpro_fan_count(
 	struct corsair_device_info* dev,
 	struct libusb_device_handle* handle,
 	struct fan_control* ctrl );
+<<<<<<< HEAD
+=======
+
+int
+corsairlink_commanderpro_fan_mode_read(
+	struct corsair_device_info* dev,
+	struct libusb_device_handle* handle,
+	struct fan_control* ctrl );
+
+int
+corsairlink_commanderpro_fan_print_mode(
+    uint8_t mode, uint16_t data, char* modestr, uint8_t modestr_size );
+>>>>>>> 8438e7b2bac729b40fc72a10aff4375d6e208fee
 
 int
 corsairlink_commanderpro_fan_mode_read(
@@ -150,7 +163,23 @@ corsairlink_commanderpro_fan_print_mode(
     uint8_t mode, uint16_t data, char* modestr, uint8_t modestr_size );
 
 int
+<<<<<<< HEAD
 corsairlink_commanderpro_get_fan_speed_rpm(
+=======
+corsairlink_commanderpro_set_fan_speed_pwm(
+	struct corsair_device_info* dev,
+	struct libusb_device_handle* handle,
+	struct fan_control* ctrl );
+
+int
+corsairlink_commanderpro_set_fan_speed_rpm(
+	struct corsair_device_info* dev,
+	struct libusb_device_handle* handle,
+	struct fan_control* ctrl );
+
+int
+corsairlink_commanderpro_get_fan_detect_type(
+>>>>>>> 8438e7b2bac729b40fc72a10aff4375d6e208fee
     struct corsair_device_info* dev,
     struct libusb_device_handle* handle,
     struct fan_control* ctrl );

@@ -108,8 +108,33 @@ commanderpro_settings(
                 );
     }
 
+<<<<<<< HEAD
     msg_debug( "Setting LED\n" );
     if ( flags.set_led == 1u )
+=======
+
+    /* get number of fans */
+    rr = dev->driver->fan.count( dev, handle, &readings.fan_ctrl );
+
+    for ( ii = 0; ii < readings.fan_ctrl.fan_count; ii++ )
+    {
+        readings.fan_ctrl.channel = (uint8_t) ii;
+        rr = dev->driver->fan.profile.read_rpm( dev, handle, &readings.fan_ctrl );
+        rr = dev->driver->fan.profile.read_pwm( dev, handle, &readings.fan_ctrl );
+        rr = dev->driver->fan.profile.read_profile( dev, handle, &readings.fan_ctrl );
+        rr = dev->driver->fan.print_mode(
+                readings.fan_ctrl.mode, readings.fan_ctrl.data, readings.fan_ctrl.mode_string,
+                sizeof( readings.fan_ctrl.mode_string ) );
+        msg_info( "Fan %d:\t%s\n", ii, readings.fan_ctrl.mode_string );
+        msg_info(
+                "\tPWM: %i%%\n\tRPM: %i\n", readings.fan_ctrl.speed_pwm,
+				readings.fan_ctrl.speed_rpm );
+    }
+
+    msg_debug( "Setting LED\n" );
+
+    if ( flags.set_led == 1 )
+>>>>>>> 8438e7b2bac729b40fc72a10aff4375d6e208fee
     {
         msg_debug( "Setting LED Flag found\n" );
         switch ( settings.led_ctrl.mode )

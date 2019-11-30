@@ -255,6 +255,7 @@ static char *fan_options[] = {[SUBOPTION_FAN_CHANNEL] = "channel",
                               [SUBOPTION_FAN_LIST_END] = 0};
 
 static char* led_options[] = {[SUBOPTION_LED_CHANNEL] = "channel",
+<<<<<<< HEAD
         [SUBOPTION_LED_MODE] = "mode",
         [SUBOPTION_LED_STRIP_COUNT] = "strip_count",
         [SUBOPTION_LEDS_PER_STRIP] = "num_leds",
@@ -286,5 +287,47 @@ void options_print(void);
 
 int options_parse(int argc, char **argv, struct option_flags *flags,
                   int8_t *device_number, struct option_parse_return *settings);
+=======
+                              [SUBOPTION_LED_MODE] = "mode",
+                              [SUBOPTION_LED_STRIP_COUNT] = "strip_count",
+                              [SUBOPTION_LED_STRIP_TYPE] = "strip_style",
+                              [SUBOPTION_LED_SPEED] = "speed",
+                              [SUBOPTION_LED_DIRECTION] = "direction",
+                              [SUBOPTION_LED_CHANGE_STYLE] = "change_style",
+                              [SUBOPTION_LED_COLORS] = "colors",
+                              [SUBOPTION_LED_WARN] = "warning_color",
+                              [SUBOPTION_LED_TEMPERATURES] = "temps",
+                              [SUBOPTION_LED_LIST_END] = 0};
+
+static char* pump_options[] = {
+    [SUBOPTION_PUMP_MODE] = "mode",     [SUBOPTION_PUMP_PWM] = "pwm",
+    [SUBOPTION_PUMP_RPM] = "rpm",       [SUBOPTION_PUMP_TEMPERATURES] = "temps",
+    [SUBOPTION_PUMP_SPEEDS] = "speeds", [SUBOPTION_PUMP_LIST_END] = 0};
+
+void
+fan_suboptions_parse( char* subopts, struct fan_control* settings );
+void
+led_suboptions_parse( char* subopts, struct led_control* settings );
+void
+pump_suboptions_parse( char* subopts, struct pump_control* settings );
+
+void
+fan_control_init( struct fan_control* settings );
+void
+led_control_init( struct led_control* settings );
+void
+pump_control_init( struct pump_control* settings );
+
+void
+options_print( void );
+
+int
+options_parse(
+    int argc,
+    char** argv,
+    struct option_flags* flags,
+    int8_t* device_number,
+    struct option_parse_return* settings );
+>>>>>>> 8438e7b2bac729b40fc72a10aff4375d6e208fee
 
 #endif

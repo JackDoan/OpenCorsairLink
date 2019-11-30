@@ -271,6 +271,9 @@ corsairlink_commanderpro_set_fan_curve(
     commands[2] = 0x00; // 0x00 = CP Temp Probe 1 .... 0x03 = CP Temp Probe 4,
                         // 0xff = External
 
+    commands[3] = ctrl->table[0].temperature >> 8;
+    commands[4] = ctrl->table[0].temperature & 0xFF;
+
     rr = dev->driver->write( handle, dev->write_endpoint, commands, 64 );
     rr = dev->driver->read( handle, dev->read_endpoint, response, 16 );
 
