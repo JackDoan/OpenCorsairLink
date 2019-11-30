@@ -81,7 +81,7 @@ main(int argc, char *argv[]) {
     }
     // rr = libusb_set_option( context, LIBUSB_OPTION_LOG_LEVEL, 2 );
 
-    //struct corsair_device_scan scanlist[10]; //todo size this differently?
+    struct corsair_device_scan scanlist[10]; //todo size this differently?
 
     corsairlink_device_scanner(context, scanlist, &scanlist_count);
     msg_debug("DEBUG: scan done, start routines\n");

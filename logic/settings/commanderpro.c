@@ -108,10 +108,8 @@ commanderpro_settings(
                 );
     }
 
-<<<<<<< HEAD
     msg_debug( "Setting LED\n" );
     if ( flags.set_led == 1u )
-=======
 
     /* get number of fans */
     rr = dev->driver->fan.count( dev, handle, &readings.fan_ctrl );
@@ -133,9 +131,7 @@ commanderpro_settings(
 
     msg_debug( "Setting LED\n" );
 
-    if ( flags.set_led == 1 )
->>>>>>> 8438e7b2bac729b40fc72a10aff4375d6e208fee
-    {
+    if ( flags.set_led == 1 ) {
         msg_debug( "Setting LED Flag found\n" );
         switch ( settings.led_ctrl.mode )
         {
