@@ -1,6 +1,6 @@
 /*
  * This file is part of OpenCorsairLink.
- * Copyright (C) 2017,2018  Sean Nelson <audiohacked@gmail.com>
+ * Copyright (C) 2017-2019  Sean Nelson <audiohacked@gmail.com>
 
  * OpenCorsairLink is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,122 +17,123 @@
  */
 
 #include "logic/scan.h"
-
 #include "common.h"
 #include "device.h"
 #include "driver.h"
 #include "print.h"
-
-#include <errno.h>
-#include <getopt.h>
 #include <libusb.h>
-#include <stdio.h>
-#include <stdlib.h>
 #include <string.h>
-#include <unistd.h>
 
-int scanlist_count = 0;
+
 
 int
-corsairlink_handle_close( struct libusb_device_handle* handle )
-{
+corsairlink_handle_close(struct libusb_device_handle *handle) {
     int rr;
 
-    rr = libusb_release_interface( handle, 0 );
-    rr = libusb_attach_kernel_driver( handle, 0 );
-    libusb_close( handle );
+    rr = libusb_release_interface(handle, 0);
+    if (rr < 0) {
+        msg_err("Unable to release USB interface\n");
+    }
 
+    libusb_close(handle);
     return rr;
 }
 
 int
-corsairlink_close( libusb_context* context )
-{
+corsairlink_close(libusb_context *context, struct corsair_device_scan *scanlist, int count) {
     int ii;
 
-    for ( ii = 0; ii < scanlist_count; ii++ )
-    {
-        corsairlink_handle_close( scanlist[ii].handle );
+    for (ii = 0; ii < count; ii++) {
+        corsairlink_handle_close(scanlist[ii].handle);
     }
-    libusb_exit( context );
-
+    libusb_exit(context);
     return 0;
 }
 
-int
-corsairlink_device_scanner( libusb_context* context, int* _scanlist_count )
-{
-    int rr; // This could be safely ignored. It is just a success flag for
-            // libusb functions.
+static int corsairlink_open(
+        struct corsair_device_info *corsair_device,
+        libusb_device *devices,
+        struct corsair_device_scan *scanlist_item)
+        {
+            uint8_t device_id = 0x00;
+    int rr; // This could be safely ignored. It is just a success flag for libusb functions.
+    rr = libusb_open(devices, &scanlist_item->handle);
+    if (scanlist_item->handle != NULL) { // Maybe try 'if (rr == 0)'
+        rr = libusb_set_auto_detach_kernel_driver(scanlist_item->handle, 1);
+        if (rr != LIBUSB_SUCCESS) {
+            msg_err("Platform does not support kernel detachment\n");
+        }
 
+        rr = libusb_claim_interface(scanlist_item->handle, 0);
+        if (rr < 0) {
+            msg_err("Unable to claim USB corsair_device interface\n");
+            return rr;
+        }
+
+        /* get device_id if we have a proper corsair_device handle */
+        corsair_device->driver->device_id(corsair_device, scanlist_item->handle, &device_id);
+        /* check to see if the device_id is the right one */
+        if (corsair_device->device_id == device_id) {
+            /* if we have the right corsair_device id we can setup the rest
+             * of the corsair_device connections */
+            return 0;
+        }
+        else {
+            msg_debug("No (device_id 0x%02X)\n", device_id);
+            corsairlink_handle_close(scanlist_item->handle);
+        }
+    }
+    else {
+        msg_debug("Could not open corsair_device %d:%d.", corsair_device->vendor_id, corsair_device->product_id);
+    }
+    return -1;
+}
+
+int
+corsairlink_get_device(libusb_context *context, struct corsair_device_scan device) {
+
+    return -1;
+}
+
+int
+corsairlink_device_scanner(libusb_context *context, struct corsair_device_scan *scanlist, int *_scanlist_count) {
     /* Start: scan code */
+    int rr; // This could be safely ignored. It is just a success flag for libusb functions.
     int ii; // Loops through USB devices.
     int jj; // Loops through known CorsairLink Devices.
-    ssize_t cnt;
-    struct corsair_device_info* device;
-    libusb_device** devices;
-    uint8_t device_id = 0x00;
+    int cnt;
+    struct corsair_device_info *corsair_device;
+    libusb_device **devices;
+
+    int scanlist_count = 0;
     // uint16_t firmware_id = 0x0000;
 
-    cnt = libusb_get_device_list( context, &devices );
-    for ( ii = 0; ii < cnt; ii++ )
-    {
-        if ( scanlist_count >= 10 )
-        {
-            msg_debug( "Limited to 10 CorsairLink devices\n" );
+    cnt = libusb_get_device_list(context, &devices);
+    for (ii = 0; ii < cnt; ii++) {
+        if (scanlist_count >= 10) {
+            msg_debug("Limited to 10 CorsairLink devices\n"); //todo why
             break;
         }
 
         struct libusb_device_descriptor desc;
-        rr = libusb_get_device_descriptor( devices[ii], &desc );
-        msg_debug( "Checking USB device %d (%04x:%04x)...\n", ii, desc.idVendor, desc.idProduct );
+        rr = libusb_get_device_descriptor(devices[ii], &desc);
+        msg_debug("Checking USB device %d (%04x:%04x)...\n", ii, desc.idVendor, desc.idProduct);
 
-        for ( jj = 0; jj < corsairlink_device_list_count; jj++ )
-        {
-            device = &corsairlink_devices[jj];
-
-            if ( ( device->vendor_id == desc.idVendor )
-                 && ( device->product_id == desc.idProduct ) )
-            {
-                msg_debug( "Corsair product detected. Checking if device is %s... ", device->name );
-                rr = libusb_open( devices[ii], &scanlist[scanlist_count].handle );
-                if ( scanlist[scanlist_count].handle != NULL )
-                { // Maybe try 'if (rr == 0)'
-                    rr = libusb_detach_kernel_driver( scanlist[scanlist_count].handle, 0 );
-                    rr = libusb_claim_interface( scanlist[scanlist_count].handle, 0 );
-
-                    /* get device_id if we have a proper device handle */
-                    device->driver->device_id(
-                        device, scanlist[scanlist_count].handle, &device_id );
-                    /* check to see if the device_id is the right one */
-                    if ( device->device_id == device_id )
-                    {
-                        /* if we have the right device id we can setup the rest
-                         * of the device connections
-                         */
-                        scanlist[scanlist_count].device = device;
-                        msg_info(
-                            "Dev=%d, CorsairLink Device Found: %s!\n", scanlist_count,
-                            device->name );
-                        scanlist_count++;
-                        break;
-                    }
-                    else
-                    {
-                        msg_debug( "No (device_id 0x%02X)\n", device_id );
-
-                        corsairlink_handle_close( scanlist[scanlist_count].handle );
-                        continue;
-                    }
-                }
-                else
-                {
-                    msg_debug( "Could not open device %d:%d.", desc.idVendor, desc.idProduct );
+        for (jj = 0; jj < corsairlink_device_list_count; jj++) {
+            corsair_device = &corsairlink_devices[jj];
+            if ((corsair_device->vendor_id == desc.idVendor) && (corsair_device->product_id == desc.idProduct)) {
+                msg_debug("Corsair product detected. Checking if corsair_device is %s... ", corsair_device->name);
+                struct corsair_device_scan *scanlist_item = &scanlist[scanlist_count];
+                int open_result = corsairlink_open(corsair_device, devices[ii], scanlist_item);
+                if (open_result == 0) {
+                    scanlist[scanlist_count].device = corsair_device;
+                    msg_info("Dev=%d, CorsairLink Device Found: %s!\n", scanlist_count, corsair_device->name);
+                    scanlist_count++;
                 }
             }
         }
     }
-    msg_info( "\n" );
+    msg_info("\n");
     *_scanlist_count = scanlist_count;
     /* End: scan code */
 

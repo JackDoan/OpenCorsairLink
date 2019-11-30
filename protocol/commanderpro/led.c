@@ -1,6 +1,6 @@
 /*
  * This file is part of OpenCorsairLink.
- * Copyright (C) 2017,2018  Sean Nelson <audiohacked@gmail.com>
+ * Copyright (C) 2017-2019  Sean Nelson <audiohacked@gmail.com>
 
  * OpenCorsairLink is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -26,10 +26,11 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+#include <print.h>
 
 int
 corsairlink_commanderpro_get_led_setup_mask(
-    struct corsair_device_info* dev, struct libusb_device_handle* handle, struct led_control* ctrl )
+        struct corsair_device_info* dev, struct libusb_device_handle* handle, struct led_control* ctrl )
 {
     int rr;
     uint8_t response[16];
@@ -43,12 +44,14 @@ corsairlink_commanderpro_get_led_setup_mask(
     rr = dev->driver->write( handle, dev->write_endpoint, commands, 64 );
     rr = dev->driver->read( handle, dev->read_endpoint, response, 16 );
 
+    dump_packet( commands, sizeof( commands ) );
+    dump_packet( response, sizeof( response ) );
     return rr;
 }
 
 int
 corsairlink_commanderpro_set_led_rgb_colour(
-    struct corsair_device_info* dev, struct libusb_device_handle* handle, struct led_control* ctrl )
+        struct corsair_device_info* dev, struct libusb_device_handle* handle, struct led_control* ctrl )
 {
     int rr;
     uint8_t response[16];
@@ -62,12 +65,14 @@ corsairlink_commanderpro_set_led_rgb_colour(
     rr = dev->driver->write( handle, dev->write_endpoint, commands, 64 );
     rr = dev->driver->read( handle, dev->read_endpoint, response, 16 );
 
+    dump_packet( commands, sizeof( commands ) );
+    dump_packet( response, sizeof( response ) );
     return rr;
 }
 
 int
 corsairlink_commanderpro_set_led_rgb_values(
-    struct corsair_device_info* dev, struct libusb_device_handle* handle, struct led_control* ctrl )
+        struct corsair_device_info* dev, struct libusb_device_handle* handle, struct led_control* ctrl )
 {
     int rr;
     uint8_t response[16];
@@ -80,12 +85,14 @@ corsairlink_commanderpro_set_led_rgb_values(
     rr = dev->driver->write( handle, dev->write_endpoint, commands, 64 );
     rr = dev->driver->read( handle, dev->read_endpoint, response, 16 );
 
+    dump_packet( commands, sizeof( commands ) );
+    dump_packet( response, sizeof( response ) );
     return rr;
 }
 
 int
 corsairlink_commanderpro_set_commit(
-    struct corsair_device_info* dev, struct libusb_device_handle* handle, struct led_control* ctrl )
+        struct corsair_device_info* dev, struct libusb_device_handle* handle, struct led_control* ctrl )
 {
     int rr;
     uint8_t response[16];
@@ -99,12 +106,14 @@ corsairlink_commanderpro_set_commit(
     rr = dev->driver->write( handle, dev->write_endpoint, commands, 64 );
     rr = dev->driver->read( handle, dev->read_endpoint, response, 16 );
 
+    //dump_packet( commands, sizeof( commands ) );
+    dump_packet( response, sizeof( response ) );
     return rr;
 }
 
 int
 corsairlink_commanderpro_set_begin(
-    struct corsair_device_info* dev, struct libusb_device_handle* handle, struct led_control* ctrl )
+        struct corsair_device_info* dev, struct libusb_device_handle* handle, struct led_control* ctrl )
 {
     int rr;
     uint8_t response[16];
@@ -118,12 +127,14 @@ corsairlink_commanderpro_set_begin(
     rr = dev->driver->write( handle, dev->write_endpoint, commands, 64 );
     rr = dev->driver->read( handle, dev->read_endpoint, response, 16 );
 
+    dump_packet( commands, sizeof( commands ) );
+    dump_packet( response, sizeof( response ) );
     return rr;
 }
 
 int
 corsairlink_commanderpro_set_led_config(
-    struct corsair_device_info* dev, struct libusb_device_handle* handle, struct led_control* ctrl )
+        struct corsair_device_info* dev, struct libusb_device_handle* handle, struct led_control* ctrl )
 {
     int rr;
     uint8_t response[16];
@@ -134,8 +145,8 @@ corsairlink_commanderpro_set_led_config(
     commands[0x00] = 0x35;
     commands[0x01] = ctrl->channel; // CLNP led_channel
     commands[0x02] = ctrl->strip_count * 10;
-    commands[0x03] = ctrl->strip_type; // 0x0A = LED Strip, 0x0C = HD Fan, 0x01 = SP
-                                       // Fan, 0x04 = ML Fan
+    commands[0x03] = ctrl->leds_per_strip; // 0x0A = LED Strip, 0x0C = HD Fan, 0x01 = SP
+    // Fan, 0x04 = ML Fan
     commands[0x04] = ctrl->mode;
     commands[0x05] = ctrl->speed;
     commands[0x06] = ctrl->direction;
@@ -166,12 +177,14 @@ corsairlink_commanderpro_set_led_config(
     rr = dev->driver->write( handle, dev->write_endpoint, commands, 64 );
     rr = dev->driver->read( handle, dev->read_endpoint, response, 16 );
 
+    dump_packet( commands, sizeof( commands ) );
+    dump_packet( response, sizeof( response ) );
     return rr;
 }
 
 int
 corsairlink_commanderpro_set_led_temperature(
-    struct corsair_device_info* dev, struct libusb_device_handle* handle, struct led_control* ctrl )
+        struct corsair_device_info* dev, struct libusb_device_handle* handle, struct led_control* ctrl )
 {
     int rr;
     uint8_t response[16];
@@ -188,12 +201,14 @@ corsairlink_commanderpro_set_led_temperature(
     rr = dev->driver->write( handle, dev->write_endpoint, commands, 64 );
     rr = dev->driver->read( handle, dev->read_endpoint, response, 16 );
 
+    dump_packet( commands, sizeof( commands ) );
+    dump_packet( response, sizeof( response ) );
     return rr;
 }
 
 int
 corsairlink_commanderpro_set_led_group_reset(
-    struct corsair_device_info* dev, struct libusb_device_handle* handle, struct led_control* ctrl )
+        struct corsair_device_info* dev, struct libusb_device_handle* handle, struct led_control* ctrl )
 {
     int rr;
     uint8_t response[16];
@@ -207,12 +222,14 @@ corsairlink_commanderpro_set_led_group_reset(
     rr = dev->driver->write( handle, dev->write_endpoint, commands, 64 );
     rr = dev->driver->read( handle, dev->read_endpoint, response, 16 );
 
+    dump_packet( commands, sizeof( commands ) );
+    dump_packet( response, sizeof( response ) );
     return rr;
 }
 
 int
 corsairlink_commanderpro_set_port_state(
-    struct corsair_device_info* dev, struct libusb_device_handle* handle, struct led_control* ctrl )
+        struct corsair_device_info* dev, struct libusb_device_handle* handle, struct led_control* ctrl )
 {
     int rr;
     uint8_t response[16];
@@ -227,12 +244,14 @@ corsairlink_commanderpro_set_port_state(
     rr = dev->driver->write( handle, dev->write_endpoint, commands, 64 );
     rr = dev->driver->read( handle, dev->read_endpoint, response, 16 );
 
+    dump_packet( commands, sizeof( commands ) );
+    dump_packet( response, sizeof( response ) );
     return rr;
 }
 
 int
 corsairlink_commanderpro_set_port_brightness(
-    struct corsair_device_info* dev, struct libusb_device_handle* handle, struct led_control* ctrl )
+        struct corsair_device_info* dev, struct libusb_device_handle* handle, struct led_control* ctrl )
 {
     int rr;
     uint8_t response[16];
@@ -245,12 +264,14 @@ corsairlink_commanderpro_set_port_brightness(
     rr = dev->driver->write( handle, dev->write_endpoint, commands, 64 );
     rr = dev->driver->read( handle, dev->read_endpoint, response, 16 );
 
+    dump_packet( commands, sizeof( commands ) );
+    dump_packet( response, sizeof( response ) );
     return rr;
 }
 
 int
 corsairlink_commanderpro_set_port_led_count(
-    struct corsair_device_info* dev, struct libusb_device_handle* handle, struct led_control* ctrl )
+        struct corsair_device_info* dev, struct libusb_device_handle* handle, struct led_control* ctrl )
 {
     int rr;
     uint8_t response[16];
@@ -263,12 +284,14 @@ corsairlink_commanderpro_set_port_led_count(
     rr = dev->driver->write( handle, dev->write_endpoint, commands, 64 );
     rr = dev->driver->read( handle, dev->read_endpoint, response, 16 );
 
+    dump_packet( commands, sizeof( commands ) );
+    dump_packet( response, sizeof( response ) );
     return rr;
 }
 
 int
 corsairlink_commanderpro_set_port_protocol(
-    struct corsair_device_info* dev, struct libusb_device_handle* handle, struct led_control* ctrl )
+        struct corsair_device_info* dev, struct libusb_device_handle* handle, struct led_control* ctrl )
 {
     int rr;
     uint8_t response[16];
@@ -281,15 +304,30 @@ corsairlink_commanderpro_set_port_protocol(
     rr = dev->driver->write( handle, dev->write_endpoint, commands, 64 );
     rr = dev->driver->read( handle, dev->read_endpoint, response, 16 );
 
+    dump_packet( commands, sizeof( commands ) );
+    dump_packet( response, sizeof( response ) );
     return rr;
 }
 
 int
 corsairlink_commanderpro_led_rainbow(
-    struct corsair_device_info* dev, struct libusb_device_handle* handle, struct led_control* ctrl )
+        struct corsair_device_info* dev, struct libusb_device_handle* handle, struct led_control* ctrl )
 {
     int rr;
     ctrl->mode = 0x00;
+    corsairlink_commanderpro_set_led_group_reset(dev, handle, ctrl);
+    rr = corsairlink_commanderpro_set_led_config( dev, handle, ctrl );
+    rr = corsairlink_commanderpro_set_commit( dev, handle, ctrl );
+    return rr;
+}
+
+int
+corsairlink_commanderpro_led_blink(
+        struct corsair_device_info* dev, struct libusb_device_handle* handle, struct led_control* ctrl )
+{
+    int rr;
+    ctrl->mode = 0x08;
+    corsairlink_commanderpro_set_led_group_reset(dev, handle, ctrl);
     rr = corsairlink_commanderpro_set_led_config( dev, handle, ctrl );
     rr = corsairlink_commanderpro_set_commit( dev, handle, ctrl );
     return rr;
@@ -297,10 +335,11 @@ corsairlink_commanderpro_led_rainbow(
 
 int
 corsairlink_commanderpro_led_static_color(
-    struct corsair_device_info* dev, struct libusb_device_handle* handle, struct led_control* ctrl )
+        struct corsair_device_info* dev, struct libusb_device_handle* handle, struct led_control* ctrl )
 {
     int rr;
     ctrl->mode = 0x04;
+    corsairlink_commanderpro_set_led_group_reset(dev, handle, ctrl);
     rr = corsairlink_commanderpro_set_led_config( dev, handle, ctrl );
     rr = corsairlink_commanderpro_set_commit( dev, handle, ctrl );
     return rr;

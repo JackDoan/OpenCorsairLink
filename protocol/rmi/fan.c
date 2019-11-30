@@ -1,6 +1,6 @@
 /*
  * This file is part of OpenCorsairLink.
- * Copyright (C) 2017,2018  Sean Nelson <audiohacked@gmail.com>
+ * Copyright (C) 2017-2019  Sean Nelson <audiohacked@gmail.com>
 
  * OpenCorsairLink is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,6 +15,20 @@
  * You should have received a copy of the GNU General Public License
  * along with OpenCorsairLink.  If not, see <http://www.gnu.org/licenses/>.
  */
+
+#include "device.h"
+#include "driver.h"
+#include "lowlevel/rmi.h"
+#include "protocol/rmi.h"
+
+#include <errno.h>
+#include <libusb.h>
+#include <math.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <unistd.h>
+#include <print.h>
 
 /*! \file protocol/rmi/fan.c
  *  \brief Fan Routines for RMi Series of Power Supplies
@@ -36,7 +50,7 @@ int corsairlink_rmi_fan_rpm(
     rr = dev->driver->write( handle, dev->write_endpoint, commands, 64 );
     rr = dev->driver->read( handle, dev->read_endpoint, response, 64 );
 
-    memcpy( rpm, response + 2, 2 );
+    memcpy( &rpm, response + 2, 2 );
 
     msg_debug2(
         "%02X %02X %02X %02X %02X %02X\n", response[0], response[1], response[2], response[3],

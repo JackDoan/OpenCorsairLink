@@ -1,6 +1,6 @@
 /*
  * This file is part of OpenCorsairLink.
- * Copyright (C) 2017,2018  Sean Nelson <audiohacked@gmail.com>
+ * Copyright (C) 2017-2019  Sean Nelson <audiohacked@gmail.com>
 
  * OpenCorsairLink is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -65,7 +65,7 @@ pump_suboptions_parse( char* subopts, struct pump_control* settings )
             {
                 if ( ii == 6 )
                     break;
-                sscanf( token, "%hu", &settings->table[ii].temperature );
+                sscanf( token, "%hhu", &settings->table[ii].temperature );
                 msg_debug( "PUMP Temperature %u: %u\n", ii, settings->table[ii].temperature );
                 ++ii;
                 token = strtok( NULL, ":" );
@@ -79,7 +79,7 @@ pump_suboptions_parse( char* subopts, struct pump_control* settings )
             {
                 if ( ii == 6 )
                     break;
-                sscanf( token, "%hu", &settings->table[ii].speed );
+                sscanf( token, "%hhu", &settings->table[ii].speed );
                 msg_debug( "PUMP Speed %d: %u\n", ii, settings->table[ii].speed );
                 ++ii;
                 token = strtok( NULL, ":" );

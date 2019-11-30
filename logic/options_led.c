@@ -1,6 +1,6 @@
 /*
  * This file is part of OpenCorsairLink.
- * Copyright (C) 2017,2018  Sean Nelson <audiohacked@gmail.com>
+ * Copyright (C) 2017-2019  Sean Nelson <audiohacked@gmail.com>
 
  * OpenCorsairLink is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -53,6 +53,7 @@ led_suboptions_parse( char* subopts, struct led_control* settings )
     while ( *subopts != '\0' )
         switch ( getsubopt( &subopts, led_options, &value ) )
         {
+
         case SUBOPTION_LED_CHANNEL:
             sscanf( value, "%hhu", &settings->channel );
             msg_debug( "LED Channel = %u\n", settings->channel );
@@ -78,9 +79,10 @@ led_suboptions_parse( char* subopts, struct led_control* settings )
             msg_debug( "LED Strip Count = %u\n", settings->strip_count );
             break;
 
-        case SUBOPTION_LED_STRIP_TYPE:
-            sscanf( value, "%hhu", &settings->strip_type );
-            msg_debug( "LED Strip Type = %u\n", settings->strip_type );
+        case SUBOPTION_LEDS_PER_STRIP:
+        case SUBOPTION_LEDS_PER_STRIP_LEGACY:
+            sscanf( value, "%hhu", &settings->leds_per_strip );
+            printf( "Num LEDs per strip = %u\n", settings->leds_per_strip );
             break;
 
         case SUBOPTION_LED_SPEED:

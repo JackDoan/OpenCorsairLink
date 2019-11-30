@@ -1,6 +1,6 @@
 /*
  * This file is part of OpenCorsairLink.
- * Copyright (C) 2017,2018  Sean Nelson <audiohacked@gmail.com>
+ * Copyright (C) 2017-2019  Sean Nelson <audiohacked@gmail.com>
 
  * OpenCorsairLink is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,6 +21,53 @@
 #include "driver.h"
 
 #include <libusb.h>
+
+//todo this depends on the order of the corsairlink_devices array! if it changes, this breaks!
+//todo fix
+enum corsair_device_enum {
+    H80i_GT = 0,
+    H100i_GTX,
+    H80,
+    Cooling_Node,
+    Lighting_Node,
+    H100,
+    H80i,
+    H100i,
+    Commander_Mini,
+    H100i_GT,
+    H110i_GT,
+    H110i,
+    H110i_GTX,
+    H80i_GT_V2,
+    H100i_GT_V2,
+    H110i_GT_V2,
+    Lighting_Node_PRO,
+    Commander_PRO,
+    Obsidian_1000D_Commander_Pro,
+    H150i_Pro,
+    H115i_Pro,
+    H110i_Pro,
+    H100i_Pro,
+    H80i_Pro,
+    USB_Dongle,
+    AX1500i,
+    HX550i,
+    HX650i,
+    HX750i,
+    HX850i,
+    HX1000i,
+    HX1200i,
+    RM550i,
+    RM650i,
+    RM750i,
+    RM850i,
+    RM1000i,
+    AX850i,
+    AX1000i,
+    AX1200i,
+    AX1600i,
+    CORSAIR_DEVICE_MAX
+};
 
 struct corsair_device_info corsairlink_devices[] = {
     {
@@ -126,20 +173,20 @@ struct corsair_device_info corsairlink_devices[] = {
         .driver = &corsairlink_driver_coolit,
         .led_control_count = 1,
         .fan_control_count = 4,
-        .pump_index = 4,
+        .pump_index = 5,
     },
     {
         .vendor_id = 0x1b1c,
         .product_id = 0x0c04,
         .device_id = 0x3d,
-        .name = "Whiptail",
+        .name = "Commander Mini", /** Whiptail */
         .read_endpoint = 0x01 | LIBUSB_ENDPOINT_IN,
         .write_endpoint =
             LIBUSB_REQUEST_TYPE_CLASS | LIBUSB_RECIPIENT_INTERFACE | LIBUSB_ENDPOINT_OUT,
         .driver = &corsairlink_driver_coolit,
         .led_control_count = 1,
         .fan_control_count = 4,
-        .pump_index = 4,
+        .pump_index = 5,
     },
     {
         .vendor_id = 0x1b1c,
@@ -152,7 +199,7 @@ struct corsair_device_info corsairlink_devices[] = {
         .driver = &corsairlink_driver_coolit,
         .led_control_count = 1,
         .fan_control_count = 4,
-        .pump_index = 4,
+        .pump_index = 5,
     },
     {
         .vendor_id = 0x1b1c,
@@ -165,7 +212,7 @@ struct corsair_device_info corsairlink_devices[] = {
         .driver = &corsairlink_driver_coolit,
         .led_control_count = 1,
         .fan_control_count = 2,
-        .pump_index = 2,
+        .pump_index = 3,
     },
     {
         .vendor_id = 0x1b1c,
@@ -245,6 +292,18 @@ struct corsair_device_info corsairlink_devices[] = {
         .product_id = 0x0c10,
         .device_id = 0xFF,
         .name = "Commander PRO", /* Barbuda */
+        .read_endpoint = 0x01 | LIBUSB_ENDPOINT_IN,
+        .write_endpoint = 0x02 | LIBUSB_ENDPOINT_OUT,
+        .driver = &corsairlink_driver_commanderpro,
+        .led_control_count = 2,
+        .fan_control_count = 6,
+        .pump_index = 0,
+    },
+    {
+        .vendor_id = 0x1b1c,
+        .product_id = 0x1d00,
+        .device_id = 0xFF,
+        .name = "Obsidian 1000D Commander Pro",
         .read_endpoint = 0x01 | LIBUSB_ENDPOINT_IN,
         .write_endpoint = 0x02 | LIBUSB_ENDPOINT_OUT,
         .driver = &corsairlink_driver_commanderpro,

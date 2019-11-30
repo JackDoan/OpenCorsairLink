@@ -1,6 +1,6 @@
 /*
  * This file is part of OpenCorsairLink.
- * Copyright (C) 2017,2018  Sean Nelson <audiohacked@gmail.com>
+ * Copyright (C) 2017-2019  Sean Nelson <audiohacked@gmail.com>
 
  * OpenCorsairLink is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,6 +20,7 @@
 #include "driver.h"
 #include "lowlevel/asetek.h"
 #include "print.h"
+#include "protocol/asetekpro.h"
 
 #include <errno.h>
 #include <libusb.h>
@@ -53,7 +54,7 @@ corsairlink_asetekpro_temperature(
     memset( response, 0, sizeof( response ) );
     memset( commands, 0, sizeof( commands ) );
 
-    commands[0] = 0xa9;
+    commands[0] = AsetekProReadTemp;
 
     rr = dev->driver->write( handle, dev->write_endpoint, commands, 1 );
     rr = dev->driver->read( handle, dev->read_endpoint, response, 6 );
@@ -67,7 +68,7 @@ corsairlink_asetekpro_temperature(
         msg_debug2( "Bad Response\n" );
     }
 
-    *( temperature ) = (double)response[3] + ( (double)response[4] / 100 );
+    *( temperature ) = (double)response[3] + ( (double)response[4] / 10 );
     // snprintf(temperature, temperature_str_len, "%d.%d C", response[3],
     // response[4]);
 
